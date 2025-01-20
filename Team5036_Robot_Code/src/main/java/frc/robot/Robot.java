@@ -102,6 +102,3 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {}
 }
-
-// get off of meeee
-// i am hopefully not going to fail physics 
