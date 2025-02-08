@@ -2,10 +2,10 @@ package frc.robot.Subsystems;
 import frc.robot.hardware.IDrivetrainHardware;
 import frc.robot.hardware.DrivetrainHardware;
 
-public class driveTrain {
+public class Drivetrain {
 
     private IDrivetrainHardware hardware;
-    public driveTrain(IDrivetrainHardware hardware) {
+    public Drivetrain(IDrivetrainHardware hardware) {
         this.hardware = hardware;
         
     }
@@ -27,7 +27,7 @@ public class driveTrain {
             return input;
         }
     }
-    public void arcadeDrive(double speed, double rotate, double max, double min){
+    public void arcadeDrive(double speed, double rotate){
         double leftSidePower = capInput(speed + rotate, 1, -1);
         double rightSidePower = capInput(speed - rotate, 1, -1);
         hardware.setLeftSide(leftSidePower);
