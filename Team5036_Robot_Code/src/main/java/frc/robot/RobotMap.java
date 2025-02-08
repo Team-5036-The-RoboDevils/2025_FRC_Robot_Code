@@ -6,4 +6,6 @@ public class RobotMap {
     public static int DRIVE_R1_CAN_ID = 3; 
     public static int DRIVE_R2_CAN_ID = 4; 
 
+    public static int ALGAE_PIVOT_CAN_ID = 5;
+    public static int ALGAE_INTAKE_CAN_ID = 6;
 }
