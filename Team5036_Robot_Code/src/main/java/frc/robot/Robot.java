@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.ci.ControllerInterface;
+import frc.robot.hardware.ClimberHardware;
+import frc.robot.hardware.IClimberHardware;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -18,6 +21,10 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  ControllerInterface ci;
+  IClimberHardware climberhardware; 
+  ClimberHardware climber; 
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -72,7 +79,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+
+  }
 
   /** This function is called periodically during operator control. */
   @Override
