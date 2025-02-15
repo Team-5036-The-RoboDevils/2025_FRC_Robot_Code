@@ -7,9 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Subsystems.*;
+import frc.robot.Subsystems.CoralMechanism;
+import frc.robot.Subsystems.Drivetrain;
 import frc.robot.ci.ControllerInterface;
-import frc.robot.hardware.*;
+import frc.robot.hardware.CoralMechanismHardware;
+import frc.robot.hardware.DrivetrainHardware;
+import frc.robot.hardware.ICoralMechanismHardware;
+import frc.robot.hardware.IDrivetrainHardware;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -32,7 +36,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
 
-  coralMechanism coralMech;
+  CoralMechanism coralMech;
   public Robot() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
@@ -42,7 +46,7 @@ public class Robot extends TimedRobot {
     drivetrainHardware = new DrivetrainHardware(); 
 
     drivetrain = new Drivetrain(drivetrainHardware);
-    coralMech = new coralMechanism(coralHardware);
+    coralMech = new CoralMechanism(coralHardware);
   }
 
   /**
