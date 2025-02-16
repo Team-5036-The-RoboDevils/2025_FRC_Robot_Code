@@ -80,12 +80,22 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    climber.setClimberMotorPower(0); 
+    climber.zeroClimberEncoderPos(0); // maybe not needed here 
 
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (ci.getClimbUp())  {
+      climber.setClimberMotorPower(0.5);
+    }
+
+    if (ci.getClimbDown()) {
+      climber.setClimberMotorPower(-0.5);
+    }
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override

@@ -5,5 +5,5 @@ public interface IClimberHardware {
 
     public double getClimberMotorPos(); 
 
-    public void setClimberEncoderPos(); 
+    public void setClimberEncoderPos(double val); 
 }

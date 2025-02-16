@@ -18,8 +18,12 @@ public class ControllerInterface {
         return drivetrainController.getRawAxis(4);
     }
 
-    public double getClimbMotorPower() {
-        return drivetrainController.getRawAxis(3/*number insert here */);
+    public boolean getClimbUp() {
+        return drivetrainController.getRawButton(3/*number insert here */); // winch winds up 
+    }
+
+    public boolean getClimbDown() {
+        return drivetrainController.getRawButton(4 /*again, insert a button here */); // winch releases
     }
 
 }

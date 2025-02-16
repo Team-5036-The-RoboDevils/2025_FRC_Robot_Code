@@ -30,8 +30,8 @@ public class Climber {
     } // ngl, probably not necessary to have a capped value.
 
     public void resetEncoder() {
-        climber.setClimberEncoderPos(0.0);
+        climber.zeroClimberEncoderPos(0.0);
     }
  // We could add a PID if need be, to automate the climb and make it happen quickly. 
- 
+
 }

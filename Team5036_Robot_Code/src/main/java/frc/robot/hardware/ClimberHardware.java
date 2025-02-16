@@ -5,8 +5,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.RobotMap;
 import com.ctre.phoenix6.*;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 
 public class ClimberHardware implements IClimberHardware {
     private TalonFX climber; 
@@ -25,12 +23,12 @@ public class ClimberHardware implements IClimberHardware {
 
     @Override
     public double getClimberMotorPos() {
-        double pos = Double.parseDouble((climber.getPosition().toString())); 
+        double pos = ((climber.getPosition().getValueAsDouble())); 
         return pos; 
     }
 
-    public void setClimberEncoderPos(double val) {
-        climber.setPosition(val); 
+    public void zeroClimberEncoderPos(double val) {
+        climber.setPosition(0.0); 
     }
     
 }
