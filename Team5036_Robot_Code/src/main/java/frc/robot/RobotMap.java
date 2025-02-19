@@ -5,5 +5,6 @@ public class RobotMap {
     public static int DRIVE_L2_CAN_ID = 2; 
     public static int DRIVE_R1_CAN_ID = 3; 
     public static int DRIVE_R2_CAN_ID = 4; 
+    public static int CLIMB_TALONFX_ID = 5; 
 
 }
