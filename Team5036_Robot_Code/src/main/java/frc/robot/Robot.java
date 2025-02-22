@@ -7,7 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.algaeInOuttake;
 import frc.robot.ci.ControllerInterface;
+import frc.robot.hardware.IAlgaeInOuttakeHardware;
+import frc.robot.hardware.AlgaeInOuttakeHardware;
 import frc.robot.hardware.ClimberHardware;
 import frc.robot.hardware.IClimberHardware;
 import frc.robot.hardware.DrivetrainHardware;
@@ -19,6 +22,9 @@ import frc.robot.subsystems.Drivetrain;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
+  ControllerInterface ci;
+  IAlgaeInOuttakeHardware algaeHardware;
+  algaeInOuttake algae;
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -37,9 +43,10 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-
+    ci = new ControllerInterface();
+    algaeHardware = new AlgaeInOuttakeHardware();
+    algae = new algaeInOuttake(algaeHardware);
     drivetrain = new Drivetrain(new DrivetrainHardware());
-    controllerinterface = new ControllerInterface();
   }
 
   /**
