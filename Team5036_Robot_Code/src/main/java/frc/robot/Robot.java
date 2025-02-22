@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ci.ControllerInterface;
 import frc.robot.hardware.ClimberHardware;
 import frc.robot.hardware.IClimberHardware;
+import frc.robot.hardware.DrivetrainHardware;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -25,6 +27,7 @@ public class Robot extends TimedRobot {
   ControllerInterface ci;
   IClimberHardware climberhardware; 
   ClimberHardware climber; 
+  private Drivetrain drivetrain;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,6 +37,9 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    drivetrain = new Drivetrain(new DrivetrainHardware());
+    controllerinterface = new ControllerInterface();
   }
 
   /**
@@ -95,6 +101,9 @@ public class Robot extends TimedRobot {
     if (ci.getClimbDown()) {
       climber.setClimberMotorPower(-0.5);
     }
+    double forward = controllerinterface.getDrivetrainForward();
+    double rotate = controllerinterface.getDrivetrainRotate();
+    drivetrain.arcadeDrive(forward, rotate);
   }
 
   /** This function is called once when the robot is disabled. */
