@@ -17,8 +17,8 @@ public class CoralMechanismHardware implements ICoralMechanismHardware {
 
     public CoralMechanismHardware(){
 
-        shooterMotor = new TalonSRX(RobotMap.CORAL_SHOOTER_CAN_ID);
-        pivotMotor = new SparkMax(RobotMap.CORAL_PIVOT_CAN_ID, MotorType.kBrushless);
+        shooterMotor = new TalonSRX(RobotMap.CORALINTAKE_ROLLERS_CAN_ID);
+        pivotMotor = new SparkMax(RobotMap.CORALINTAKE_PIVOT_CAN_ID, MotorType.kBrushless);
         pivotEncoder = pivotMotor.getEncoder();
      
     }

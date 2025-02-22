@@ -1,11 +1,11 @@
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
-import frc.robot.hardware.IAlgaeInOuttakeHardware;
+import frc.robot.hardware.IAlgaeMechanismHardware;
 
-public class algaeInOuttake {
+public class AlgaeMechanism {
     
-    private IAlgaeInOuttakeHardware hardware;
-    public algaeInOuttake(IAlgaeInOuttakeHardware hardware) {
+    private IAlgaeMechanismHardware hardware;
+    public AlgaeMechanism(IAlgaeMechanismHardware hardware) {
         this.hardware = hardware;
     }
 

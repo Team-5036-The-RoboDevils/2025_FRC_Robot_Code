@@ -5,12 +5,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import frc.robot.RobotMap;
 
-public class AlgaeInOuttakeHardware implements IAlgaeInOuttakeHardware {
+public class AlgaeMechanismHardware implements IAlgaeMechanismHardware {
 
     private TalonSRX pivot;
     private TalonSRX intake;
 
-    public AlgaeInOuttakeHardware() {
+    public AlgaeMechanismHardware() {
         pivot = new TalonSRX(RobotMap.ALGAE_PIVOT_CAN_ID);
         intake = new TalonSRX(RobotMap.ALGAE_PIVOT_CAN_ID);
     }

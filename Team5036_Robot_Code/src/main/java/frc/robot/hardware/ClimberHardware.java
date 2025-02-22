@@ -1,15 +1,12 @@
 package frc.robot.hardware;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
-import edu.wpi.first.units.measure.Angle;
 import frc.robot.RobotMap;
 import com.ctre.phoenix6.*;
 
 public class ClimberHardware implements IClimberHardware {
     private TalonFX climber; 
-    //private TalonFXConfiguration climberencoderconfig = new TalonFXConfiguration(); 
-    private StatusCode climbencoder; 
+    //private TalonFXConfiguration climberencoderconfig = new TalonFXConfiguration();  
 
     public ClimberHardware() {
         climber = new TalonFX(RobotMap.CLIMB_TALONFX_ID); 

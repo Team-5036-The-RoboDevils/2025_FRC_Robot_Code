@@ -1,6 +1,6 @@
 package frc.robot.hardware;
 
-public interface IAlgaeInOuttakeHardware {
+public interface IAlgaeMechanismHardware {
 
     public void setPivotMotor(double val);
 

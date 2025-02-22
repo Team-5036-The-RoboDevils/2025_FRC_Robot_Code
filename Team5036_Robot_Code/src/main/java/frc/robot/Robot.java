@@ -7,17 +7,18 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Subsystems.CoralMechanism;
 import frc.robot.hardware.CoralMechanismHardware;
 import frc.robot.hardware.ICoralMechanismHardware;
-import frc.robot.Subsystems.algaeInOuttake;
 import frc.robot.ci.ControllerInterface;
-import frc.robot.hardware.IAlgaeInOuttakeHardware;
-import frc.robot.hardware.AlgaeInOuttakeHardware;
+import frc.robot.hardware.IAlgaeMechanismHardware;
+import frc.robot.hardware.AlgaeMechanismHardware;
 import frc.robot.hardware.ClimberHardware;
 import frc.robot.hardware.IClimberHardware;
 import frc.robot.hardware.DrivetrainHardware;
+import frc.robot.hardware.IDrivetrainHardware;
+import frc.robot.subsystems.CoralMechanism;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.AlgaeMechanism;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -25,41 +26,39 @@ import frc.robot.subsystems.Drivetrain;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  ControllerInterface ci;
-  IAlgaeInOuttakeHardware algaeHardware;
-  algaeInOuttake algae;
+  
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  ICoralMechanismHardware coralHardware;
-  IDrivetrainHardware drivetrainHardware;
-  ControllerInterface ci;
 
-  Drivetrain drivetrain;
-
-  ControllerInterface ci;
-  IClimberHardware climberhardware; 
-  ClimberHardware climber; 
+  private ControllerInterface ci;
+  private IAlgaeMechanismHardware algaeHardware;
+  private AlgaeMechanism algaeMech;
+  private ICoralMechanismHardware coralHardware;
+  private IDrivetrainHardware drivetrainHardware;
+  private IClimberHardware climberhardware; 
+  private ClimberHardware climber; 
   private Drivetrain drivetrain;
+  private CoralMechanism coralMech;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
 
-  CoralMechanism coralMech;
   public Robot() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
+    ci = new ControllerInterface();
+    algaeHardware = new AlgaeMechanismHardware();
+    algaeMech = new AlgaeMechanism(algaeHardware);
     coralHardware = new CoralMechanismHardware();
     coralMech = new CoralMechanism(coralHardware);
-    ci = new ControllerInterface();
-    algaeHardware = new AlgaeInOuttakeHardware();
-    algae = new algaeInOuttake(algaeHardware);
-    drivetrain = new Drivetrain(new DrivetrainHardware());
+    drivetrainHardware = new DrivetrainHardware();
+    drivetrain = new Drivetrain(drivetrainHardware);
   }
 
   /**
@@ -114,17 +113,34 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double forward = ci.getDriveTrainForward();
-    double rotate = ci.getDriveTrainRotate();
+    //drive
+    double forward = ci.getDrivetrainForward();
+    double rotate = ci.getDrivetrainRotate();
+    drivetrain.arcadeDrive(forward, rotate);
     
-    if (ci.getClimbUp())  {
+    // climb mechanism
+    if (ci.getWinchRetract())  {
       climber.setClimberMotorPower(0.5);
     }
-
-    if (ci.getClimbDown()) {
+    if (ci.getWinchRelease()) {
       climber.setClimberMotorPower(-0.5);
     }
-    drivetrain.arcadeDrive(forward, rotate);
+
+    // coral
+    if(ci.coralIntake()){
+      coralMech.runIntake(0.4); // Testing purposes NOT set-in-stone value
+    } else if (ci.coralOuttake()){
+      coralMech.runOuttake(0.5); // Testing 
+    }
+    coralMech.openLoopCoralArticulation(ci.getCoralOpenLoopArticulation());
+
+    //algae
+    if (ci.getAlgaeIntake()) {
+      algaeMech.setIntakeMotor(.5);
+    } else if (ci.getAlgaeOuttake()) {
+      algaeMech.setIntakeMotor(-.5);
+    }
+    algaeMech.setPivotMotor(ci.getAlgaePivot());
   }
 
   /** This function is called once when the robot is disabled. */
@@ -143,15 +159,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {
-    if(ci.coralIntake()){
-      coralMech.runIntake(0.4); // Testing purposes NOT set-in-stone value
-    } else if (ci.coralOuttake()){
-      coralMech.runOuttake(0.5); // Testing 
-    }
-
-    coralMech.openLoopCoralArticulation(ci.getOpenLoopArticulation());
-  }
+  public void testPeriodic() {}
 
   /** This function is called once when the robot is first started up. */
   @Override

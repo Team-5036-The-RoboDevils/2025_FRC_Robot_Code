@@ -4,42 +4,53 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class ControllerInterface {
     private Joystick drivetrainController;
-    private Joystick operatorController; 
+    private Joystick operatorController;
         
     public ControllerInterface() {
         drivetrainController = new Joystick(0);
     }
 
-    public double getDriveTrainForward() {
+    public double getDrivetrainForward() {
         return -drivetrainController.getRawAxis(1);
     }
 
-    public double getDriveTrainRotate() {
+    public double getDrivetrainRotate() {
         return drivetrainController.getRawAxis(4);
     }
 
-    public boolean coralIntake(){
-        return drivetrainController.getRawButton(1);
+    public boolean getWinchRetract() {
+        return drivetrainController.getRawAxis(3) > .2;
     }
 
-    public boolean coralOuttake(){
-        return drivetrainController.getRawButton(2);
+    public boolean getWinchRelease() {
+        return drivetrainController.getRawButtonPressed(6);
     }
 
-    public double getOpenLoopArticulation(){
-        return drivetrainController.getRawAxis(3); // This is only Temporary and FOR TESTING, will change once we map to controller
+    public boolean coralIntake() {
+        return operatorController.getRawButtonPressed(4);
     }
 
-    public boolean closedLoopArticulation(){
-        return drivetrainController.getRawButton(4);
-    }
-  
-    public boolean getClimbUp() {
-        return drivetrainController.getRawButton(3/*number insert here */); // winch winds up 
+    public boolean coralOuttake() {
+        return operatorController.getRawButtonPressed(1);
     }
 
-    public boolean getClimbDown() {
-        return drivetrainController.getRawButton(4 /*again, insert a button here */); // winch releases
+    public double getCoralOpenLoopArticulation() {
+        if(operatorController.getRawButtonPressed(7)) {
+            return operatorController.getRawAxis(5);
+        }
+        return 0.;
+    }
+
+    public boolean getAlgaeIntake() {
+        return operatorController.getRawAxis(2) > .3;
+    }
+
+    public boolean getAlgaeOuttake() {
+        return operatorController.getRawButtonPressed(5);
+    }
+
+    public double getAlgaePivot() {
+        return operatorController.getRawAxis(1);
     }
 }
 
