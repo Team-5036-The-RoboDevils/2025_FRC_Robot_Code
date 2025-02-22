@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.util.sendable.Sendable; 
 import frc.robot.RobotMap;
 
+import edu.wpi.first.wpilibj.SPI;
+
 
 public class DrivetrainHardware implements IDrivetrainHardware { // makes a promise to java to implement
     // the functions that are in IDrivetrainHardware 
@@ -27,6 +29,7 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
         left2 = new SparkMax(RobotMap.DRIVE_L2_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
         right1 = new SparkMax(RobotMap.DRIVE_R1_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
         right2 = new SparkMax(RobotMap.DRIVE_R2_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
+       // gyro = new AHRS(SPI.Port.kMXP); // RoboRIO gyro, to control robot position FIX THIS CODE
         gyro = new AHRS(NavXComType.kMXP_SPI); // RoboRIO gyro, to control robot position FIX THIS CODE
 
         // ATTENTION: Add external encoders here later, once we actually put them on LOL

@@ -10,7 +10,4 @@ public class RobotMap {
     public static int CORALINTAKE_ROLLERS_CAN_ID;
     public static int ALGAE_PIVOT_CAN_ID;
     public static int ALGAE_ROLLER_CAN_ID;
-
-    public static int ALGAE_PIVOT_CAN_ID = 5;
-    public static int ALGAE_INTAKE_CAN_ID = 6;
 }

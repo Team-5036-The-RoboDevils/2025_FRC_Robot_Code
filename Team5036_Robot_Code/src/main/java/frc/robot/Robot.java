@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.CoralMechanism;
+import frc.robot.hardware.CoralMechanismHardware;
+import frc.robot.hardware.ICoralMechanismHardware;
 import frc.robot.Subsystems.algaeInOuttake;
 import frc.robot.ci.ControllerInterface;
 import frc.robot.hardware.IAlgaeInOuttakeHardware;
@@ -29,6 +32,11 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  ICoralMechanismHardware coralHardware;
+  IDrivetrainHardware drivetrainHardware;
+  ControllerInterface ci;
+
+  Drivetrain drivetrain;
 
   ControllerInterface ci;
   IClimberHardware climberhardware; 
@@ -39,10 +47,15 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
+  CoralMechanism coralMech;
   public Robot() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    coralHardware = new CoralMechanismHardware();
+    coralMech = new CoralMechanism(coralHardware);
     ci = new ControllerInterface();
     algaeHardware = new AlgaeInOuttakeHardware();
     algae = new algaeInOuttake(algaeHardware);
@@ -101,6 +114,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    double forward = ci.getDriveTrainForward();
+    double rotate = ci.getDriveTrainRotate();
+    
     if (ci.getClimbUp())  {
       climber.setClimberMotorPower(0.5);
     }
@@ -108,8 +124,6 @@ public class Robot extends TimedRobot {
     if (ci.getClimbDown()) {
       climber.setClimberMotorPower(-0.5);
     }
-    double forward = controllerinterface.getDrivetrainForward();
-    double rotate = controllerinterface.getDrivetrainRotate();
     drivetrain.arcadeDrive(forward, rotate);
   }
 
@@ -123,11 +137,21 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when test mode is enabled. */
   @Override
-  public void testInit() {}
+  public void testInit() {
+    
+  }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    if(ci.coralIntake()){
+      coralMech.runIntake(0.4); // Testing purposes NOT set-in-stone value
+    } else if (ci.coralOuttake()){
+      coralMech.runOuttake(0.5); // Testing 
+    }
+
+    coralMech.openLoopCoralArticulation(ci.getOpenLoopArticulation());
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
