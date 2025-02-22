@@ -1,12 +1,16 @@
 package frc.robot.hardware;
+import com.ctre.phoenix6.configs.GyroTrimConfigs;
 import com.revrobotics.*;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+import com.studica.frc.jni.AHRSJNI;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.util.sendable.Sendable; 
 import frc.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -26,6 +30,7 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
         right1 = new SparkMax(RobotMap.DRIVE_R1_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
         right2 = new SparkMax(RobotMap.DRIVE_R2_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
        // gyro = new AHRS(SPI.Port.kMXP); // RoboRIO gyro, to control robot position FIX THIS CODE
+        gyro = new AHRS(NavXComType.kMXP_SPI); // RoboRIO gyro, to control robot position FIX THIS CODE
 
         // ATTENTION: Add external encoders here later, once we actually put them on LOL
         // If we have issues with the gyro's angles again, add in code to reset the gyro to zero while calibrating. 
@@ -41,5 +46,10 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
     public void setLeftSide(double val) {
         left1.set(val); 
         left2.set(val); 
+    }
+
+    @Override
+    public void zeroGyroPos() {
+        // TODO: do this
     }
 }

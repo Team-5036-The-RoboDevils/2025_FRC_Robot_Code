@@ -8,12 +8,16 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.CoralMechanism;
-import frc.robot.Subsystems.Drivetrain;
-import frc.robot.ci.ControllerInterface;
 import frc.robot.hardware.CoralMechanismHardware;
-import frc.robot.hardware.DrivetrainHardware;
 import frc.robot.hardware.ICoralMechanismHardware;
-import frc.robot.hardware.IDrivetrainHardware;
+import frc.robot.Subsystems.algaeInOuttake;
+import frc.robot.ci.ControllerInterface;
+import frc.robot.hardware.IAlgaeInOuttakeHardware;
+import frc.robot.hardware.AlgaeInOuttakeHardware;
+import frc.robot.hardware.ClimberHardware;
+import frc.robot.hardware.IClimberHardware;
+import frc.robot.hardware.DrivetrainHardware;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -21,6 +25,9 @@ import frc.robot.hardware.IDrivetrainHardware;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
+  ControllerInterface ci;
+  IAlgaeInOuttakeHardware algaeHardware;
+  algaeInOuttake algae;
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -30,6 +37,11 @@ public class Robot extends TimedRobot {
   ControllerInterface ci;
 
   Drivetrain drivetrain;
+
+  ControllerInterface ci;
+  IClimberHardware climberhardware; 
+  ClimberHardware climber; 
+  private Drivetrain drivetrain;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -43,10 +55,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     coralHardware = new CoralMechanismHardware();
-    drivetrainHardware = new DrivetrainHardware(); 
-
-    drivetrain = new Drivetrain(drivetrainHardware);
     coralMech = new CoralMechanism(coralHardware);
+    ci = new ControllerInterface();
+    algaeHardware = new AlgaeInOuttakeHardware();
+    algae = new algaeInOuttake(algaeHardware);
+    drivetrain = new Drivetrain(new DrivetrainHardware());
   }
 
   /**
@@ -93,17 +106,25 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    climber.setClimberMotorPower(0); 
+    climber.zeroClimberEncoderPos(0); // maybe not needed here 
 
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double speed = ci.getDriveTrainForward();
+    double forward = ci.getDriveTrainForward();
     double rotate = ci.getDriveTrainRotate();
-
-    drivetrain.arcadeDrive(speed, rotate);
     
+    if (ci.getClimbUp())  {
+      climber.setClimberMotorPower(0.5);
+    }
+
+    if (ci.getClimbDown()) {
+      climber.setClimberMotorPower(-0.5);
+    }
+    drivetrain.arcadeDrive(forward, rotate);
   }
 
   /** This function is called once when the robot is disabled. */
