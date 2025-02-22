@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ci.ControllerInterface;
+import frc.robot.hardware.ClimberHardware;
+import frc.robot.hardware.IClimberHardware;
 import frc.robot.hardware.DrivetrainHardware;
 import frc.robot.subsystems.Drivetrain;
 
@@ -22,8 +24,10 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  ControllerInterface ci;
+  IClimberHardware climberhardware; 
+  ClimberHardware climber; 
   private Drivetrain drivetrain;
-  private ControllerInterface controllerinterface;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -81,11 +85,22 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    climber.setClimberMotorPower(0); 
+    climber.zeroClimberEncoderPos(0); // maybe not needed here 
+
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if (ci.getClimbUp())  {
+      climber.setClimberMotorPower(0.5);
+    }
+
+    if (ci.getClimbDown()) {
+      climber.setClimberMotorPower(-0.5);
+    }
     double forward = controllerinterface.getDrivetrainForward();
     double rotate = controllerinterface.getDrivetrainRotate();
     drivetrain.arcadeDrive(forward, rotate);
