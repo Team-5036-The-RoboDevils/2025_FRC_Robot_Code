@@ -14,6 +14,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import frc.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Encoder; 
 
 
 public class DrivetrainHardware implements IDrivetrainHardware { // makes a promise to java to implement
@@ -23,6 +24,7 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
     private SparkLowLevel right1; 
     private SparkLowLevel right2; 
     private AHRS gyro; 
+    private Encoder driveEncoder; 
 
     public DrivetrainHardware() {
         left1 = new SparkMax(RobotMap.DRIVE_L1_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
@@ -31,6 +33,7 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
         right2 = new SparkMax(RobotMap.DRIVE_R2_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
        // gyro = new AHRS(SPI.Port.kMXP); // RoboRIO gyro, to control robot position FIX THIS CODE
         gyro = new AHRS(NavXComType.kMXP_SPI); // RoboRIO gyro, to control robot position FIX THIS CODE
+        //driveEncoder = new Encoder()
 
         // ATTENTION: Add external encoders here later, once we actually put them on LOL
         // If we have issues with the gyro's angles again, add in code to reset the gyro to zero while calibrating. 
@@ -38,8 +41,8 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
     
     @Override
     public void setRightSide(double val) {
-        right1.set(val); // Remember, this could be positive or negative. (Random, so change accordingly)
-        right2.set(val); 
+        right1.set(-val); // Remember, this could be positive or negative. (Random, so change accordingly)
+        right2.set(-val); // ---- This one is good.
     }
 
     @Override 

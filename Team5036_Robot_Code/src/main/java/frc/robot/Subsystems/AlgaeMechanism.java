@@ -10,11 +10,11 @@ public class AlgaeMechanism {
     }
 
     public void setPivotMotor(double val) {
-        hardware.setPivotMotor(capVal(val, -.6, .6));
+        hardware.setPivotMotor(capVal(val, -1, 1));
     }
 
     public void setIntakeMotor(double val) {
-        hardware.setIntakeMotor(capVal(val, -.6, .6));
+        hardware.setIntakeMotor(capVal(val, -1, 1));
     }
 
     public double capVal(double val, double min, double max) {

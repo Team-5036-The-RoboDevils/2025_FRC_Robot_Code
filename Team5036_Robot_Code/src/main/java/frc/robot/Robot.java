@@ -14,6 +14,7 @@ import frc.robot.hardware.IAlgaeMechanismHardware;
 import frc.robot.hardware.AlgaeMechanismHardware;
 import frc.robot.hardware.ClimberHardware;
 import frc.robot.hardware.IClimberHardware;
+import frc.robot.subsystems.Climber; 
 import frc.robot.hardware.DrivetrainHardware;
 import frc.robot.hardware.IDrivetrainHardware;
 import frc.robot.subsystems.CoralMechanism;
@@ -38,7 +39,9 @@ public class Robot extends TimedRobot {
   private ICoralMechanismHardware coralHardware;
   private IDrivetrainHardware drivetrainHardware;
   private IClimberHardware climberhardware; 
-  private ClimberHardware climber; 
+
+  private Climber climber; 
+
   private Drivetrain drivetrain;
   private CoralMechanism coralMech;
 
@@ -51,14 +54,18 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    
 
     ci = new ControllerInterface();
+    climberhardware = new ClimberHardware(); 
+    climber = new Climber(climberhardware); 
     algaeHardware = new AlgaeMechanismHardware();
     algaeMech = new AlgaeMechanism(algaeHardware);
     coralHardware = new CoralMechanismHardware();
     coralMech = new CoralMechanism(coralHardware);
     drivetrainHardware = new DrivetrainHardware();
     drivetrain = new Drivetrain(drivetrainHardware);
+
   }
 
   /**
@@ -69,7 +76,13 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    SmartDashboard.putNumber("Raw Encoder Value", coralMech.getRawEncoderPosition()); 
+    //System.out.println(System.currentTimeMillis() + " " + coralMech.getRawEncoderPosition()); 
+    SmartDashboard.putNumber("Converted Angle", coralMech.getCurrentAngle()); 
+    //System.out.println(System.currentTimeMillis() + " " + coralMech.getCurrentAngle()); 
+    SmartDashboard.putNumber("Tuning Axis", ci.getArticulatedIntakePIDTuningAxis()); 
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -105,8 +118,9 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    climber.setClimberMotorPower(0); 
-    climber.zeroClimberEncoderPos(0); // maybe not needed here 
+    climber.climberActuation(0); 
+    climber.resetEncoder(); // maybe not needed here 
+    //drivetrain.
 
   }
 
@@ -120,26 +134,44 @@ public class Robot extends TimedRobot {
     
     // climb mechanism
     if (ci.getWinchRetract())  {
-      climber.setClimberMotorPower(0.5);
+      climber.climberActuation(0.5);
     }
-    if (ci.getWinchRelease()) {
-      climber.setClimberMotorPower(-0.5);
+    else if (ci.getWinchRelease()) {
+      climber.climberActuation(-0.5);
+    } else {
+      climber.climberActuation(0); 
     }
 
-    // coral
+    // coral INTAKE
     if(ci.coralIntake()){
-      coralMech.runIntake(0.4); // Testing purposes NOT set-in-stone value
-    } else if (ci.coralOuttake()){
-      coralMech.runOuttake(0.5); // Testing 
+      coralMech.runIntake(1); // Testing purposes NOT set-in-stone value
+      //System.out.println("INTAKING" + System.currentTimeMillis());
+    } else if (ci.coralOuttake() ){
+      coralMech.runOuttake(1); // Testing 
+      //System.out.println("OUTTAKING"+ System.currentTimeMillis());
+    } else {
+      //System.out.println("STOPPING" + System.currentTimeMillis());
+      coralMech.runIntake(0);
     }
-    coralMech.openLoopCoralArticulation(ci.getCoralOpenLoopArticulation());
 
-    //algae
+    // coral PIVOT
+    if (ci.getDebugTuningButton()) {
+      coralMech.closedLoopCoralArticulation(0, ci.getArticulatedIntakePIDTuningAxis(), 0);
+    } else {
+      coralMech.openLoopCoralArticulation(0); 
+    }
+    //coralMech.openLoopCoralArticulation(ci.getCoralOpenLoopArticulation()); UNCOMMENT FOR OPEN LOOP STUFF 
+
+    //algae INTAKE
     if (ci.getAlgaeIntake()) {
       algaeMech.setIntakeMotor(.5);
     } else if (ci.getAlgaeOuttake()) {
       algaeMech.setIntakeMotor(-.5);
+    } else {
+      algaeMech.setIntakeMotor(0); 
     }
+
+    // algae PIVOT
     algaeMech.setPivotMotor(ci.getAlgaePivot());
   }
 
@@ -160,6 +192,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
 
   /** This function is called once when the robot is first started up. */
   @Override
