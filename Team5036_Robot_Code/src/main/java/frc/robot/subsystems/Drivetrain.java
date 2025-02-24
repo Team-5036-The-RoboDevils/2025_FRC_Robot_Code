@@ -26,5 +26,8 @@ public class Drivetrain {
         hardware.setLeftSide(leftSidePower);
         hardware.setRightSide(rightSidePower);
     }
-}
 
+    public void resetEncoders() {
+        // DO THIS LATER 
+    }
+}
