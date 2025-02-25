@@ -156,7 +156,7 @@ public class Robot extends TimedRobot {
 
     // coral PIVOT
     if (ci.getDebugTuningButton()) {
-      coralMech.closedLoopCoralArticulation(0, ci.getArticulatedIntakePIDTuningAxis(), 0);
+      coralMech.closedLoopCoralArticulation(11, 0.2, ci.getArticulatedIntakePIDTuningAxis());
     } else {
       coralMech.openLoopCoralArticulation(0); 
     }

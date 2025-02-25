@@ -46,7 +46,7 @@ public class CoralMechanism {
         if (Math.abs(error) <= ACCEPTABLE_RANGE) {
             coralHardware.openLoopArticulation(feedForwardVal);
         } else {
-            double modifiedOutput = (error * kP) + feedForwardVal;
+            double modifiedOutput = (error * tempGravity) + feedForwardVal;
             coralHardware.openLoopArticulation(modifiedOutput);
         }
     }

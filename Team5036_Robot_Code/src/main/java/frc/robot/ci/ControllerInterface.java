@@ -58,7 +58,7 @@ public class ControllerInterface {
 
     public double getArticulatedIntakePIDTuningAxis() {
         double a = 0; 
-        double b = 0.2; 
+        double b = 0.01; 
         return ((-tuningJoystick.getRawAxis(3) + 1 / 2 ) * (b - a)) + a; 
     }
 
