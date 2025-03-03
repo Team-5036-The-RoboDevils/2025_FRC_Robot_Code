@@ -7,4 +7,8 @@ public interface IDrivetrainHardware {
     public void setLeftSide(double val);
 
     public void zeroGyroPos();
+
+    public double getGyroAngle(); 
+
+    public double getDriveEncoderPos(); 
 }

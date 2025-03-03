@@ -31,11 +31,9 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
         left2 = new SparkMax(RobotMap.DRIVE_L2_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
         right1 = new SparkMax(RobotMap.DRIVE_R1_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
         right2 = new SparkMax(RobotMap.DRIVE_R2_CAN_ID, SparkLowLevel.MotorType.kBrushless); 
-       // gyro = new AHRS(SPI.Port.kMXP); // RoboRIO gyro, to control robot position FIX THIS CODE
-        gyro = new AHRS(NavXComType.kMXP_SPI); // RoboRIO gyro, to control robot position FIX THIS CODE
-        //driveEncoder = new Encoder()
+        gyro = new AHRS(NavXComType.kMXP_SPI); // RoboRIO gyro, to control robot position 
+        driveEncoder = new Encoder(RobotMap.DIO_PORT_A_DRIVE_ENCODER, RobotMap.DIO_PORT_B_DRIVE_ENCODER, false, Encoder.EncodingType.k4X);
 
-        // ATTENTION: Add external encoders here later, once we actually put them on LOL
         // If we have issues with the gyro's angles again, add in code to reset the gyro to zero while calibrating. 
     }
     
@@ -53,6 +51,21 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
 
     @Override
     public void zeroGyroPos() {
-        // TODO: do this
+        driveEncoder.reset(); 
+    }
+
+    @Override 
+    public double getGyroAngle() {
+        return gyro.getYaw(); 
+    }
+
+    @Override 
+    public double getDriveEncoderPos() {
+        return driveEncoder.getDistance(); 
+    }
+
+    @Override 
+    public void resetDriveEncoders() {
+        driveEncoder.reset(); 
     }
 }
