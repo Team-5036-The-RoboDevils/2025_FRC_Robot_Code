@@ -16,12 +16,14 @@ public class moveArm {
         }
         
     
-        public void executeAngle(double desiredAngle, boolean putArmDown){
-            if(putArmDown){
+        public void executeAngle(double desiredAngle, boolean putArmDown, double startTime){
+
+            if(putArmDown && isInAutoTime(startTime)){
                 coralMech.openLoopCoralArticulation(0);
-            } else if (!putArmDown) {
+            } else if (!putArmDown && isInAutoTime(startTime)) {
                 coralMech.closedLoopCoralArticulation(desiredAngle, tempG, tempP);
             }
+        
     }
     
 }
