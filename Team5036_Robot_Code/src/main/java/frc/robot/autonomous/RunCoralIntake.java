@@ -4,7 +4,7 @@ import frc.robot.subsystems.CoralMechanism;
 import edu.wpi.first.wpilibj.Timer;
 
 public class RunCoralIntake {
-    public static void execute(CoralMechanism coral, double pow, double time) {
+    public static void execute(CoralMechanism coral, double pow, double time, double autoStartTime) {
         double startTime = Timer.getTimestamp();
         double newTime = Timer.getTimestamp();
         if (pow < -1) {
@@ -12,11 +12,12 @@ public class RunCoralIntake {
         } else if (pow > 1) {
             pow = 1;
         }
-        while (newTime-startTime < time && newTime-startTime < 15) {
-            coral.runIntake(pow);
+        coral.runIntake(pow);
+        while (newTime-startTime < time && newTime-autoStartTime < 15) {
             newTime = Timer.getTimestamp();
             Timer.delay(.002);
         }
+        coral.runIntake(0);
         return;
     }
 }
