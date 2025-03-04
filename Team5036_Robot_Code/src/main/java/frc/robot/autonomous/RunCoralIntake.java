@@ -12,9 +12,10 @@ public class RunCoralIntake {
         } else if (pow > 1) {
             pow = 1;
         }
-        while (newTime-startTime < time) {
-                coral.runIntake(pow);
-                newTime = Timer.getTimestamp();
+        while (newTime-startTime < time && newTime-startTime < 15) {
+            coral.runIntake(pow);
+            newTime = Timer.getTimestamp();
+            Timer.delay(.002);
         }
         return;
     }
