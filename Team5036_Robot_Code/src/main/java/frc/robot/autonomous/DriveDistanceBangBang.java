@@ -18,14 +18,14 @@ public class DriveDistanceBangBang {
 
         if (!driveBack){
             drivetrain.resetEncoders();
-            while(drivetrain.getDistanceTravelled() <= targetDistInCm && isInAutoTime(startTime)){
+            while(drivetrain.convertEncoderTicksToCentimetres(drivetrain.getRawEncoder()) <= targetDistInCm && isInAutoTime(startTime)){
                 drivetrain.arcadeDrive(forward, rotate);
                 coralMech.closedLoopCoralArticulation(holdAngle, kGrav, kP);
             }
             drivetrain.arcadeDrive(0, 0);
         } else if (driveBack) {
             drivetrain.resetEncoders();
-            while (drivetrain.getDistanceTravelled() >= -targetDistInCm && isInAutoTime(startTime)) { 
+            while (drivetrain.convertEncoderTicksToCentimetres(drivetrain.getRawEncoder()) >= -targetDistInCm && isInAutoTime(startTime)) { 
                 drivetrain.arcadeDrive(forward, rotate);
                 coralMech.closedLoopCoralArticulation(holdAngle, kGrav, kP);
             }

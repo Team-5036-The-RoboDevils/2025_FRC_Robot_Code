@@ -45,7 +45,7 @@ public class ControllerInterface {
     }
 
     public boolean getAlgaeIntake() {
-        return operatorController.getRawAxis(2) > .3;
+        return operatorController.getRawButton(6);
     }
 
     public boolean getAlgaeOuttake() {
@@ -62,8 +62,20 @@ public class ControllerInterface {
         return ((-tuningJoystick.getRawAxis(3) + 1 / 2 ) * (b - a)) + a; 
     }
 
-    public boolean getDebugTuningButton() {
-        return tuningJoystick.getRawButton(4); 
+    public double getHP() {
+        return operatorController.getRawAxis(3); 
+    }
+
+    public double getInside(){
+        return operatorController.getRawAxis(2);
+    }
+
+    public boolean getToL1(){
+        return operatorController.getRawButton(3);
+    }
+
+    public boolean getToL2(){
+        return operatorController.getRawButton(2);
     }
 }
 

@@ -1,7 +1,7 @@
 package frc.robot.autonomous;
 import frc.robot.hardware.ICoralMechanismHardware;
 import frc.robot.subsystems.*;
-public class moveArm {
+public class MoveArm {
     private CoralMechanism coralMech;
     private double tempG = 0;
     private double tempP = 0;

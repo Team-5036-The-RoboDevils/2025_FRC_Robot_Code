@@ -11,4 +11,6 @@ public interface IDrivetrainHardware {
     public double getGyroAngle(); 
 
     public double getDriveEncoderPos(); 
+
+    public void resetDriveEncoders(); 
 }

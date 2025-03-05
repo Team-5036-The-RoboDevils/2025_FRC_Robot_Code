@@ -38,12 +38,12 @@ public class Drivetrain {
     }
 
     public double convertEncoderTicksToCentimetres(double encoderTicks) {
-        return encoderTicks; 
-        // ATTENTION: IMPLEMENT THIS CLASS ONCE IN THE SHOP. CHECK HOW MANY ENCODER VALUES = TO ONE METRE. 
-        // THEN FIX THIS CODE
+        double converterConst = 37.03;
+        double convertedDist = encoderTicks / converterConst; 
+        return convertedDist;  
     }
 
-    public double getDistanceTravelled() {
-        return convertEncoderTicksToCentimetres(hardware.getDriveEncoderPos()); 
+    public double getRawEncoder() {
+        return hardware.getDriveEncoderPos(); 
     }
 }

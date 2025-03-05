@@ -25,13 +25,4 @@ public class AlgaeMechanism {
         }
         return val;
     }
-
-    public double getEncoderPos() {
-        return hardware.getPivotEncoderPos();
-    }
-
-    public void resetEncoderpos() {
-        hardware.resetPivotEncoderPos();
-        return;
-    }
 }

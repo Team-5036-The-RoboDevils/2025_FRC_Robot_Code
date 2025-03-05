@@ -20,6 +20,7 @@ import frc.robot.hardware.IDrivetrainHardware;
 import frc.robot.subsystems.CoralMechanism;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.AlgaeMechanism;
+import frc.robot.autonomous.*;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -30,6 +31,25 @@ public class Robot extends TimedRobot {
   
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
+  private static final String taxi = "TAXI"; 
+
+  private static final String leftPreload = "LEFT_CORAL_PRELOAD"; 
+  private static final String leftPreloadAndHP = "LEFT_PRELOAD_AND_HP"; 
+  private static final String leftPreloadAndScoreL1 = "LEFT_PRELOAD_AND_SCOREL1"; 
+  private static final String leftPreloadAndScoreL2 = "LEFT_PRELOAD_AND_SCOREL2"; 
+
+  private static final String rightPreload = "RIGHT_CORAL_PRELOAD"; 
+  private static final String rightPreloadAndHP = "RIGHT_PRELOAD_AND_SCORE"; 
+  private static final String rightPreloadAndScoreL1 = "RIGHT_PRELOAD_AND_HPL1"; 
+  private static final String rightPreloadAndScoreL2 = "RIGHT_PRELOAD_AND_SCOREL2"; 
+
+  private static final String middlePreload = "MIDDLE_PRELOAD"; 
+  private static final String middlePreloadAndHPLeft = "MIDDLE_PRELOAD_AND_HP_Left"; 
+  private static final String middlePreloadAndScoreL1 = "MIDDLE_PRELOAD_AND_SCOREL1"; 
+  private static final String middlePreloadAndHPRight = "MIDDLE_PRELOAD_AND_HP_Right";
+  private static final String middlePreloadAndHPRightL2 = "MIDDLE_PRELOAD_AND_HP_RIGHT_L2"; 
+  private static final String middlePreloadAndHPLeftL2 = "MIDDLE_PRELOAD_AND_HP_LEFT_L2"; 
+
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
@@ -53,6 +73,22 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("TAXI", taxi);
+    m_chooser.addOption("LEFT_SCORE_PRELOAD", leftPreload);
+    m_chooser.addOption("LEFT_SCORE_PRELOAD_AND_HP", leftPreloadAndHP); 
+    m_chooser.addOption("LEFT_SCORE_PRELOAD_AND_L1", leftPreloadAndScoreL1); 
+    m_chooser.addOption("LEFT_SCORE_PRELOAD_AND_L2", leftPreloadAndScoreL2); 
+    m_chooser.addOption("RIGHT_SCORE_PRELOAD", rightPreload); 
+    m_chooser.addOption("RIGHT_SCORE_PRELOAD_AND_HP", rightPreloadAndHP); 
+    m_chooser.addOption("RIGHT_SCORE_PRELOAD_AND_L1", rightPreloadAndScoreL1); 
+    m_chooser.addOption("RIGHT_SCORE_PRELOAD_AND_L2", rightPreloadAndScoreL2); 
+    m_chooser.addOption("MIDDLE_SCORE_PRELOAD", middlePreload); 
+    m_chooser.addOption("MIDDLE_SCORE_AND_HP_LEFT", middlePreloadAndHPLeft); 
+    m_chooser.addOption("MIDDLE_PRELOAD_AND_HP_RIGHT", middlePreloadAndHPRight);
+    m_chooser.addOption("MIDDLE_SCORE_PRELOAD_AND_L1_RIGHT_HP", middlePreloadAndScoreL1); 
+    m_chooser.addOption("MIDDLE_SCORE_PRELOAD_AND_L1_LEFT_HP", middlePreloadAndHPLeft);
+    m_chooser.addOption("MIDDLE_SCORE_PRELOAD_AND_L2_RIGHT_HP", middlePreloadAndHPRightL2); 
+    m_chooser.addOption("MIDDLE_SCORE_PRELOAD_AND_L2_LEFT_HP", middlePreloadAndHPLeftL2);
     SmartDashboard.putData("Auto choices", m_chooser);
     
 
@@ -82,8 +118,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Converted Angle", coralMech.getCurrentAngle()); 
     //System.out.println(System.currentTimeMillis() + " " + coralMech.getCurrentAngle()); 
     SmartDashboard.putNumber("Tuning Axis", ci.getArticulatedIntakePIDTuningAxis()); 
+    SmartDashboard.putNumber("Drivetrain Encoder Ticks ", drivetrain.getRawEncoder()); 
+    SmartDashboard.putNumber("Drivetrain Distance (cm)", drivetrain.convertEncoderTicksToCentimetres(drivetrain.getRawEncoder()));
   }
-
+  
+  private static boolean isInAutoTime(double startTime){
+            
+    double currentTime = System.currentTimeMillis();
+    if((currentTime - startTime) > 15000){
+        return false;
+    }
+    return true;
+  }
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
    * autonomous modes using the dashboard. The sendable chooser code works with the Java
@@ -97,6 +143,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
+    
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
   }
@@ -112,6 +159,10 @@ public class Robot extends TimedRobot {
       default:
         // Put default auto code here
         break;
+    }
+
+    if (m_autoSelected == taxi) {
+      DriveDistanceBangBang.execute(drivetrain, coralMech, 11, 0.0711, 0.0289, 135, false, 0.4, System.currentTimeMillis()); 
     }
   }
 
@@ -155,10 +206,16 @@ public class Robot extends TimedRobot {
     }
 
     // coral PIVOT
-    if (ci.getDebugTuningButton()) {
-      coralMech.closedLoopCoralArticulation(11, 0.2, ci.getArticulatedIntakePIDTuningAxis());
+    if (ci.getHP() > 0.2) {
+      coralMech.closedLoopCoralArticulation(25, 0.0711, 0.0289);
+    } else if(ci.getToL1()){
+      coralMech.closedLoopCoralArticulation(-28, 0.0711, 0.0289);
+    } else if(ci.getToL2()){
+      coralMech.closedLoopCoralArticulation(-11, 0.0711, 0.0289);
+    } else if(ci.getInside() > 0.1) {
+      coralMech.closedLoopCoralArticulation(200,0.0711, 0.0289);
     } else {
-      coralMech.openLoopCoralArticulation(0); 
+      coralMech.openLoopCoralArticulation(0);
     }
     //coralMech.openLoopCoralArticulation(ci.getCoralOpenLoopArticulation()); UNCOMMENT FOR OPEN LOOP STUFF 
 
@@ -172,7 +229,11 @@ public class Robot extends TimedRobot {
     }
 
     // algae PIVOT
-    algaeMech.setPivotMotor(ci.getAlgaePivot());
+    if (ci.getAlgaePivot() > 0.2 || ci.getAlgaePivot() < -0.2) {
+      algaeMech.setPivotMotor(ci.getAlgaePivot()); 
+    } else {
+      algaeMech.setPivotMotor(0);
+    }
   }
 
   /** This function is called once when the robot is disabled. */
