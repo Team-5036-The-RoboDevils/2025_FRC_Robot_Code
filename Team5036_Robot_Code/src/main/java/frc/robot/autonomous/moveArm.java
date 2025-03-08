@@ -1,10 +1,11 @@
 package frc.robot.autonomous;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.hardware.ICoralMechanismHardware;
 import frc.robot.subsystems.*;
 public class MoveArm {
     private CoralMechanism coralMech;
-    private double tempG = 0;
-    private double tempP = 0;
+    private static final double kGrav = 0.0289; 
+    private static final double kP = 0.0711; 
     
         private static boolean isInAutoTime(double startTime){
             
@@ -16,12 +17,10 @@ public class MoveArm {
         }
         
     
-        public void executeAngle(double desiredAngle, boolean putArmDown, double startTime){
-
-            if(putArmDown && isInAutoTime(startTime)){
-                coralMech.openLoopCoralArticulation(0);
-            } else if (!putArmDown && isInAutoTime(startTime)) {
-                coralMech.closedLoopCoralArticulation(desiredAngle, tempG, tempP);
+        public static void executeAngle(CoralMechanism coralMech, double desiredAngle, double startTime){
+            if (isInAutoTime(startTime)) {
+                coralMech.closedLoopCoralArticulation(desiredAngle, kGrav, kP);
+                Timer.delay(0.02);
             }
         
     }

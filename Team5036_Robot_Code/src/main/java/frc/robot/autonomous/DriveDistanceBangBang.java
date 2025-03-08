@@ -1,10 +1,11 @@
 package frc.robot.autonomous;
 
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.CoralMechanism;
 
 public class DriveDistanceBangBang {
-    
+
     private static boolean isInAutoTime(double startTime) { 
         double currentTime = System.currentTimeMillis();
         if((currentTime - startTime) > 15000){
@@ -21,6 +22,7 @@ public class DriveDistanceBangBang {
             while(drivetrain.convertEncoderTicksToCentimetres(drivetrain.getRawEncoder()) <= targetDistInCm && isInAutoTime(startTime)){
                 drivetrain.arcadeDrive(forward, rotate);
                 coralMech.closedLoopCoralArticulation(holdAngle, kGrav, kP);
+                Timer.delay(0.02);
             }
             drivetrain.arcadeDrive(0, 0);
         } else if (driveBack) {
@@ -28,6 +30,7 @@ public class DriveDistanceBangBang {
             while (drivetrain.convertEncoderTicksToCentimetres(drivetrain.getRawEncoder()) >= -targetDistInCm && isInAutoTime(startTime)) { 
                 drivetrain.arcadeDrive(forward, rotate);
                 coralMech.closedLoopCoralArticulation(holdAngle, kGrav, kP);
+                Timer.delay(0.02);
             }
             drivetrain.arcadeDrive(0, 0);
         }

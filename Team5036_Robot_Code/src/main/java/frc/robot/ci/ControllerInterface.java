@@ -29,12 +29,12 @@ public class ControllerInterface {
         return drivetrainController.getRawButton(6);
     }
 
-    public boolean coralIntake() {
-        return operatorController.getRawButton(4);
+    public double coralIntake() {
+        return operatorController.getRawAxis(3);
     }
 
-    public boolean coralOuttake() {
-        return operatorController.getRawButton(1);
+    public double coralOuttake() {
+        return operatorController.getRawAxis(2);
     }
 
     public double getCoralOpenLoopArticulation() {
@@ -62,12 +62,12 @@ public class ControllerInterface {
         return ((-tuningJoystick.getRawAxis(3) + 1 / 2 ) * (b - a)) + a; 
     }
 
-    public double getHP() {
-        return operatorController.getRawAxis(3); 
+    public boolean getHP() {
+        return operatorController.getRawButton(4); 
     }
 
-    public double getInside(){
-        return operatorController.getRawAxis(2);
+    public boolean getInside(){
+        return operatorController.getRawButton(1);
     }
 
     public boolean getToL1(){
@@ -76,6 +76,10 @@ public class ControllerInterface {
 
     public boolean getToL2(){
         return operatorController.getRawButton(2);
+    }
+
+    public boolean getToL3() {
+        return operatorController.getRawButton(8); 
     }
 }
 

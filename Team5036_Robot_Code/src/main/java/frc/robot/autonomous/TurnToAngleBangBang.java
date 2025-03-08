@@ -1,6 +1,7 @@
 package frc.robot.autonomous;
 
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.CoralMechanism; 
 
 public class TurnToAngleBangBang {
@@ -20,11 +21,13 @@ public class TurnToAngleBangBang {
             while (isInAutoTime(startTime) && drivetrain.getGyroAngle() <= angleToTurn) {
                 drivetrain.arcadeDrive(0, turningPower);
                 coralMechanism.closedLoopCoralArticulation(angleToHoldArmAt, kP, kFGravity);
+                Timer.delay(0.02);
             }
         } else if (turningClockwise) {
             while (isInAutoTime(startTime) && drivetrain.getGyroAngle() >= -angleToTurn) {
                 drivetrain.arcadeDrive(0, -turningPower);
-                coralMechanism.closedLoopCoralArticulation(angleToHoldArmAt, kP, kFGravity); 
+                coralMechanism.closedLoopCoralArticulation(angleToHoldArmAt, kP, kFGravity);
+                Timer.delay(0.02);
             }
         }
     }
