@@ -51,7 +51,7 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
 
     @Override
     public void zeroGyroPos() {
-        driveEncoder.reset(); 
+        gyro.reset(); 
     }
 
     @Override 

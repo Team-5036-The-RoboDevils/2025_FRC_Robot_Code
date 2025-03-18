@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.hardware.DrivetrainHardware;
 import frc.robot.hardware.IDrivetrainHardware;
 
 public class Drivetrain {
@@ -37,6 +38,10 @@ public class Drivetrain {
         return hardware.getGyroAngle(); 
     }
 
+    public void resetGyro() {
+        hardware.zeroGyroPos();
+    }
+
     public double convertEncoderTicksToCentimetres(double encoderTicks) {
         double converterConst = 37.03;
         double convertedDist = encoderTicks / converterConst; 
@@ -45,5 +50,10 @@ public class Drivetrain {
 
     public double getRawEncoder() {
         return hardware.getDriveEncoderPos(); 
+    }
+
+    public double getDistanceTravelled() {
+        double currentPos = hardware.getDriveEncoderPos();
+        return convertEncoderTicksToCentimetres(currentPos); 
     }
 }

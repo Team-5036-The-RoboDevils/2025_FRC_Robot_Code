@@ -25,16 +25,33 @@ public class ControllerInterface {
         return drivetrainController.getRawAxis(3) > .2;
     }
 
+    public boolean getWinchRetractOperator() {
+        double operatorclimbinput =  operatorController.getPOV(); 
+        if (operatorclimbinput >= 88 && operatorclimbinput <= 92) {
+            return true; 
+        }
+        return false; 
+    }
+
+
+    public boolean getWinchReleaseOperator() {
+        double operatorclimbinput =  operatorController.getPOV(); 
+        if (operatorclimbinput >= 268 && operatorclimbinput <= 272) {
+            return true; 
+        }
+        return false; 
+    }
+
     public boolean getWinchRelease() {
         return drivetrainController.getRawButton(6);
     }
 
     public double coralIntake() {
-        return operatorController.getRawAxis(3);
+        return operatorController.getRawAxis(2);
     }
 
     public double coralOuttake() {
-        return operatorController.getRawAxis(2);
+        return operatorController.getRawAxis(3);
     }
 
     public double getCoralOpenLoopArticulation() {
@@ -62,6 +79,10 @@ public class ControllerInterface {
         return ((-tuningJoystick.getRawAxis(3) + 1 / 2 ) * (b - a)) + a; 
     }
 
+    public boolean getDebugButton() {
+        return tuningJoystick.getRawButton(4); 
+    }
+
     public boolean getHP() {
         return operatorController.getRawButton(4); 
     }
@@ -81,5 +102,17 @@ public class ControllerInterface {
     public boolean getToL3() {
         return operatorController.getRawButton(8); 
     }
+
+    public boolean getHoldCoral() {
+        double operatorInput = operatorController.getPOV(); 
+        if (operatorInput >= 178 && operatorInput <= 182) {
+            return true; 
+        }
+        return false; 
+    }
+
+   /*  public boolean getL1Slow() {
+        return operatorController.getRawButton(8); 
+    }*/
 }
 

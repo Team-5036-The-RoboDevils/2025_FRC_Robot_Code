@@ -15,13 +15,13 @@ public class Climber {
             return min; 
         }
         if (val > max) {
-            return max; 
+            return max;
         }
-        return val; 
+        return val;
     } // This function might not be necessary. 
 
     public double getClimberEncoderPos() {
-        return climber.getClimberMotorPos(); 
+        return climber.getClimberMotorPos();
     }
 
     public void climberActuation(double val) {

@@ -14,14 +14,23 @@ public class DriveDistanceBangBang {
         return true; 
     }
 
-    public static void execute(Drivetrain drivetrain, CoralMechanism coralMech, double holdAngle, double kGrav, double kP, double targetDistInCm, boolean driveBack, double forward, double startTime){
-        double rotate = 0; // We are not rotating. only driving straight 
+   /*  public static void execute(Drivetrain drivetrain, CoralMechanism coralMech, double holdAngle, double kGrav, double kP, double targetDistInCm, boolean driveBack, double forward, long startTime){
+        //double rotate = 0; // We are not rotating. only driving straight 
+        drivetrain.execute(drivetrain, coralMech, holdAngle, kGrav, kP, targetDistInCm, driveBack, forward, startTime, 60000); 
+    }*/
 
+    public static void execute(Drivetrain drivetrain, CoralMechanism coralMech, double holdAngle, double kGrav, double kP, double targetDistInCm, boolean driveBack, double forward, long startTime, long timeLimit, double kPDrive){
+        double rotate = 0; // We are not rotating. only driving straight 
+        double startOfCommand = System.currentTimeMillis(); 
         if (!driveBack){
             drivetrain.resetEncoders();
             while(drivetrain.convertEncoderTicksToCentimetres(drivetrain.getRawEncoder()) <= targetDistInCm && isInAutoTime(startTime)){
-                drivetrain.arcadeDrive(forward, rotate);
+                drivetrain.arcadeDrive(forward, -kPDrive * drivetrain.getGyroAngle());
+                if (System.currentTimeMillis() - startOfCommand >= timeLimit) {
+                    break; 
+                }
                 coralMech.closedLoopCoralArticulation(holdAngle, kGrav, kP);
+                //if (currentTime >= )
                 Timer.delay(0.02);
             }
             drivetrain.arcadeDrive(0, 0);
@@ -29,6 +38,9 @@ public class DriveDistanceBangBang {
             drivetrain.resetEncoders();
             while (drivetrain.convertEncoderTicksToCentimetres(drivetrain.getRawEncoder()) >= -targetDistInCm && isInAutoTime(startTime)) { 
                 drivetrain.arcadeDrive(forward, rotate);
+                if (System.currentTimeMillis() - startOfCommand >= timeLimit) {
+                    break; 
+                }
                 coralMech.closedLoopCoralArticulation(holdAngle, kGrav, kP);
                 Timer.delay(0.02);
             }
@@ -36,3 +48,4 @@ public class DriveDistanceBangBang {
         }
     }
 }
+

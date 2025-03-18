@@ -58,7 +58,9 @@ public class Robot extends TimedRobot {
 
   private static final String right_left_Straight_L3 = "RIGHT_LEFT_STRAIGHT_L3"; 
   private static final String middlePreloadL3 = "MIDDLE_PRELOAD_L3"; 
+  private static final String getAlgaeOffL3 = "GET_ALGAE_OFF_L3"; 
   
+  private static final String pushAnotherRobot = "PUSH_ROBOT_TAXI"; 
   // private static final String RIGHTLEFT_STRAIGHT_HP_L1_STRING
 
   private String m_autoSelected;
@@ -115,6 +117,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("RIGHT/LEFT_SCORE_PRELOAD_L1_STRAIGHT", right_left_Straight_L1);
     m_chooser.addOption("RIGHT/LEFT_SCORE_PRELOAD_L3_STRAIGHT", right_left_Straight_L3);
     m_chooser.addOption("RIGHT/LEFT_SCORE_PRELOAD_L1_STRAIGHT", right_left_Straight_L1);
+    m_chooser.addOption("GET_ALGAE_OFF_L3", getAlgaeOffL3);
+    m_chooser.addOption("PUSH_ROBOT_TAXI", pushAnotherRobot);
     SmartDashboard.putData("Auto choices", m_chooser);
     
 
@@ -171,69 +175,113 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     long startOfAuto = System.currentTimeMillis(); 
     m_autoSelected = m_chooser.getSelected();
-    
+    // RIGHT = BLUE CAGES, LEFT = RED CAGES 
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
 
     if (m_autoSelected == taxi) { // TAXI WORKS FINE.
-      DriveDistanceBangBang.execute(drivetrain, coralMech, 11, kGrav, kP, 250, false, 0.1, startOfAuto); 
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, 11, kGrav, kP, 250, false, 0.1, startOfAuto, 9000, 0.015); 
     } else if (m_autoSelected == middlePreloadL1) { // THIS WORKS, BUT YOU MUST CHECK OUTTAKE.
+      drivetrain.resetEncoders(); 
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 250, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 1, 3000, startOfAuto);
+    } /* else if (m_autoSelected == middlePreloadL2) { // DOESN'T WORK. ALGAE ON L2. COULD ADD CODE TO REMOVE IT.
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
       DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 250, false, 0.1, startOfAuto); 
       RunCoralIntake.execute(coralMech, -1, 3000, startOfAuto);
-    } else if (m_autoSelected == middlePreloadL2) { // DOESN'T WORK. ALGAE ON L2. COULD ADD CODE TO REMOVE IT.
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 250, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 3000, startOfAuto);
-    } else if (m_autoSelected == rightPreloadL1) { // WANT TO TEST 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto); 
+    } */else if (m_autoSelected == rightPreloadL1) { // WANT TO TEST 
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto, 9000, 0.02); 
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 60, 0.1, false, Inside);
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 270, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 2000, startOfAuto); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 270, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 1, 2000, startOfAuto); 
     } else if (m_autoSelected == rightPreloadL2) { // WANT TO TEST 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto); 
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto, 9000, 0.015); 
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 60, 0.1, false, Inside);
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 270, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 2000, startOfAuto); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 270, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 1, 2000, startOfAuto); 
       // DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 270, true, 0.1, startOfAuto); 
       // TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 60, 0.1, true, Inside);
     } else if (m_autoSelected == leftPreloadL1) { // WANT TO TEST 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto); 
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto, 9000, 0.015); 
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 60, 0.1, true, Inside);
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 270, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 2000, startOfAuto); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 270, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 1, 2000, startOfAuto); 
     } else if (m_autoSelected == leftPreloadL2) { // WANT TO TEST 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto); 
+      drivetrain.resetEncoders();
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 185, false, 0.1, startOfAuto, 9000, 0.015); 
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 60, 0.1, true, Inside);
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 270, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 2000, startOfAuto); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 270, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 1, 2000, startOfAuto); 
     } else if (m_autoSelected == rightPreloadAndScoreL2) { // Scores the preloaded coral, goes to right HP, scores on L2
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 130, false, 0.1, startOfAuto); 
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 130, false, 0.1, startOfAuto, 9000, 0.015); 
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 111.5, 0.1, false, Inside); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 203, false, 0.1, startOfAuto);
-      RunCoralIntake.execute(coralMech, -1, 2000 , System.currentTimeMillis()); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 203, true, 0.1, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 203, false, 0.1, startOfAuto, 9000, 0.015);
+      RunCoralIntake.execute(coralMech, 1, 2000 , System.currentTimeMillis()); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 203, true, 0.1, startOfAuto, 9000, 0.015);
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 68.4, 0.1, true, Inside); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 358, false, 0.1, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 358, false, 0.1, startOfAuto, 9000, 0.015);
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 41.835, 0.1, true, Inside); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, HP, kGrav, kP, 115, false, 0.1, startOfAuto);
-      RunCoralIntake.execute(coralMech, 1, 1500, System.currentTimeMillis()); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, HP, kGrav, kP, 115, true, 0.1, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, HP, kGrav, kP, 115, false, 0.1, startOfAuto, 9000, 0.015);
+      RunCoralIntake.execute(coralMech, -1, 1500, System.currentTimeMillis()); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, HP, kGrav, kP, 115, true, 0.1, startOfAuto, 9000, 0.015);
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 41.835, 0.1, false, Inside); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 386, true, 0.1, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 386, true, 0.1, startOfAuto, 9000, 0.015);
       TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 68.4, 0.1, false, Inside); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 210, false, 0.1, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 210, false, 0.1, startOfAuto, 9000, 0.015);
       RunCoralIntake.execute(coralMech, -1, 2000, System.currentTimeMillis()); 
     } else if (m_autoSelected == right_left_Straight_L1) {
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 300, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 3000, startOfAuto);
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 0.5, 3000, startOfAuto);
     } else if (m_autoSelected == right_left_Straight_L2) {
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 300, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 3000, startOfAuto);
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 300, false, 0.1, startOfAuto,9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 0.5, 3000, startOfAuto);
     } else if (m_autoSelected == right_left_Straight_L3) {
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 300, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 3000, startOfAuto);
+      drivetrain.resetEncoders();
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 1, 3000, startOfAuto);
+    } else if (m_autoSelected == getAlgaeOffL3) {
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 300, false, 0.1, startOfAuto,9000, 0.015); 
+      MoveArm.executeAngle(coralMech, L3, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 10, true, 0.1, System.currentTimeMillis(),9000, 0.015); 
     } else if (m_autoSelected == middlePreloadL3) {
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 300, false, 0.1, startOfAuto); 
-      RunCoralIntake.execute(coralMech, -1, 3000, startOfAuto);
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 190, false, 0.1, startOfAuto, 9000, 0.015); 
+      MoveArm.executeAngle(coralMech, L3, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 87, true, 0.1, System.currentTimeMillis(), 9000, 0.015); 
+      TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 9, 0.1, false, Inside); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 88, false, 0.1, System.currentTimeMillis(), 9000, 0.015);
+      RunCoralIntake.execute(coralMech, 1, 2000, startOfAuto);
+    } else if (m_autoSelected == rightPreloadAndHP) {
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 0.5, 3000, startOfAuto);
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 150, true, 0.1, startOfAuto, 9000, 0.015); 
+      TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 45, 0.1, true, Inside); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, HP, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015);
+    } else if (m_autoSelected == pushAnotherRobot) {
+      drivetrain.resetEncoders();
+      drivetrain.resetGyro(); 
+      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 280, false, 0.6, startOfAuto, 9000, 0.015);
     }
   }
 
@@ -272,20 +320,25 @@ public class Robot extends TimedRobot {
     // climb mechanism
     if (ci.getWinchRetract())  {
       climber.climberActuation(0.5);
-    }
-    else if (ci.getWinchRelease()) {
+    } else if (ci.getWinchRelease()) {
       climber.climberActuation(-0.5);
+    } else if (ci.getWinchReleaseOperator()) {
+      climber.climberActuation(-0.5); 
+    } else if (ci.getWinchRetractOperator()) {
+      climber.climberActuation(0.5);
     } else {
       climber.climberActuation(0);
     }
 
     // coral INTAKE
-    if(ci.coralIntake() > 0.1){
-      coralMech.runIntake(1); // Testing purposes NOT set-in-stone value
+    if(ci.coralIntake() > 0.02){
+      coralMech.runIntake(ci.coralIntake()); // Testing purposes NOT set-in-stone value
       //System.out.println("INTAKING" + System.currentTimeMillis());
-    } else if (ci.coralOuttake() > 0.1){
+    } else if (ci.coralOuttake() > 0.02) {
       coralMech.runOuttake(ci.coralOuttake()); // Testing 
       //System.out.println("OUTTAKING"+ System.currentTimeMillis());
+    } else if (ci.getHoldCoral()) {
+      coralMech.runIntake(0.3); 
     } else {
       //System.out.println("STOPPING" + System.currentTimeMillis());
       coralMech.runIntake(0);
@@ -306,10 +359,16 @@ public class Robot extends TimedRobot {
       coralMech.closedLoopCoralArticulation(-28, 0.0711, 0.0289); 
    // } else if(ci.getArticulatedIntakePIDTuningAxis() > 0.1) {
       //coralMech.closedLoopCoralArticulation(0, ci.getArticulatedIntakePIDTuningAxis(), 0); 
+    } else if (ci.getWinchReleaseOperator()) {
+      coralMech.closedLoopCoralArticulation(-28, 0.0711, 0.0289);
     } else if (Math.abs(ci.getCoralOpenLoopArticulation()) > 0.01) {
       coralMech.openLoopCoralArticulation(ci.getCoralOpenLoopArticulation()); 
     } else {
       coralMech.openLoopCoralArticulation(0);
+    }
+
+    if (ci.getDebugButton()) {
+      drivetrain.resetGyro();
     }
 
     //algae INTAKE

@@ -14,11 +14,11 @@ public class CoralMechanism {
     }
 
     public void runIntake(double val){
-        coralHardware.run(val);
+        coralHardware.run(-val);
     }
 
     public void runOuttake(double val){
-        coralHardware.run(-val);
+        coralHardware.run(val);
     }
 
     public void openLoopCoralArticulation(double val){
