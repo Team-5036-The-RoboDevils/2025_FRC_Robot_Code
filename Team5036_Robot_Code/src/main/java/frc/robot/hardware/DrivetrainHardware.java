@@ -58,6 +58,10 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
     public double getGyroAngle() {
         return gyro.getYaw(); 
     }
+    @Override
+    public void setGyroAngle(){
+     gyro.setAngleAdjustment(-79);
+    }
 
     @Override 
     public double getDriveEncoderPos() {

@@ -76,9 +76,9 @@ public class Robot extends TimedRobot {
   private final double kP = 0.0711; 
   private final double L2 = -11; 
   private final double L1 = -28; 
-  private final double L3 = 43; 
+  private final double L3 = 31; 
   private final double HP = 25; 
-  private final double Inside = 200; 
+  private final double Inside = 199; 
 
   private Climber climber; 
 
@@ -177,15 +177,14 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // RIGHT = BLUE CAGES, LEFT = RED CAGES 
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    drivetrain.resetEncoders();
+    drivetrain.resetGyro(); 
     System.out.println("Auto selected: " + m_autoSelected);
 
     if (m_autoSelected == taxi) { // TAXI WORKS FINE.
-      drivetrain.resetEncoders();
-      drivetrain.resetGyro(); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, 11, kGrav, kP, 250, false, 0.1, startOfAuto, 9000, 0.015); 
+      DriveDistP.execute(drivetrain, coralMech, Inside, kGrav, kP, 250, false, 0.1, startOfAuto, 9000, 0.015); 
+      RunCoralIntake.execute(coralMech, 1, 2000, startOfAuto);
     } else if (m_autoSelected == middlePreloadL1) { // THIS WORKS, BUT YOU MUST CHECK OUTTAKE.
-      drivetrain.resetEncoders(); 
-      drivetrain.resetGyro(); 
       DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 250, false, 0.1, startOfAuto, 9000, 0.015); 
       RunCoralIntake.execute(coralMech, 1, 3000, startOfAuto);
     } /* else if (m_autoSelected == middlePreloadL2) { // DOESN'T WORK. ALGAE ON L2. COULD ADD CODE TO REMOVE IT.
@@ -245,22 +244,22 @@ public class Robot extends TimedRobot {
       drivetrain.resetEncoders();
       drivetrain.resetGyro(); 
       DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015); 
-      RunCoralIntake.execute(coralMech, 0.5, 3000, startOfAuto);
+      RunCoralIntake.execute(coralMech, L1, 0.5, 3000, startOfAuto);
     } else if (m_autoSelected == right_left_Straight_L2) {
       drivetrain.resetEncoders();
       drivetrain.resetGyro(); 
       DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 300, false, 0.1, startOfAuto,9000, 0.015); 
-      RunCoralIntake.execute(coralMech, 0.5, 3000, startOfAuto);
+      RunCoralIntake.execute(coralMech, L2, 0.5, 3000, startOfAuto);
     } else if (m_autoSelected == right_left_Straight_L3) {
       drivetrain.resetEncoders();
       DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015); 
-      RunCoralIntake.execute(coralMech, 1, 3000, startOfAuto);
+      RunCoralIntake.execute(coralMech, L3, 1, 3000, startOfAuto);
     } else if (m_autoSelected == getAlgaeOffL3) {
       drivetrain.resetEncoders();
       drivetrain.resetGyro(); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L2, kGrav, kP, 300, false, 0.1, startOfAuto,9000, 0.015); 
-      MoveArm.executeAngle(coralMech, L3, startOfAuto);
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 10, true, 0.1, System.currentTimeMillis(),9000, 0.015); 
+      MoveArm.executeAngle(coralMech, L2, startOfAuto);
+      DriveDistP.execute(drivetrain, coralMech, L2, kGrav, kP, 230, false, 0.1, startOfAuto,7000, 0.03); 
+      MoveArm.executeAngle(coralMech, Inside, startOfAuto);
     } else if (m_autoSelected == middlePreloadL3) {
       drivetrain.resetEncoders();
       drivetrain.resetGyro(); 
@@ -271,13 +270,14 @@ public class Robot extends TimedRobot {
       DriveDistanceBangBang.execute(drivetrain, coralMech, L3, kGrav, kP, 88, false, 0.1, System.currentTimeMillis(), 9000, 0.015);
       RunCoralIntake.execute(coralMech, 1, 2000, startOfAuto);
     } else if (m_autoSelected == rightPreloadAndHP) {
-      drivetrain.resetEncoders();
       drivetrain.resetGyro(); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, L1, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015); 
-      RunCoralIntake.execute(coralMech, 0.5, 3000, startOfAuto);
-      DriveDistanceBangBang.execute(drivetrain, coralMech, Inside, kGrav, kP, 150, true, 0.1, startOfAuto, 9000, 0.015); 
-      TurnToAngleBangBang.execute(System.currentTimeMillis(), drivetrain, coralMech, 45, 0.1, true, Inside); 
-      DriveDistanceBangBang.execute(drivetrain, coralMech, HP, kGrav, kP, 300, false, 0.1, startOfAuto, 9000, 0.015);
+      drivetrain.resetEncoders();
+      MoveArm.executeAngle(coralMech, L2, startOfAuto);
+      DriveDistP.execute(drivetrain, coralMech, L2, kGrav, kP, 260, false, 0.1, startOfAuto, 3000, 0.015); 
+      RunCoralIntake.execute(coralMech, L2, 0.5, 1500, startOfAuto);
+      drivetrain.resetGyro();
+      TurnToAnglePID.execute(drivetrain, coralMech, 71.2, 0.1, true, HP, 33.5, 0, startOfAuto);
+      //TurnToAnglePID.execute(drivetrain, coralMech, 71.2 /*unused parameter, reference */, 0.3, true, HP, 37.7, 0 /*unused parameter */, System.currentTimeMillis());
     } else if (m_autoSelected == pushAnotherRobot) {
       drivetrain.resetEncoders();
       drivetrain.resetGyro(); 
@@ -319,13 +319,13 @@ public class Robot extends TimedRobot {
     drivetrain.arcadeDrive(forward, rotate);
     // climb mechanism
     if (ci.getWinchRetract())  {
-      climber.climberActuation(0.5);
+      climber.climberActuation(1);
     } else if (ci.getWinchRelease()) {
-      climber.climberActuation(-0.5);
+      climber.climberActuation(-1);
     } else if (ci.getWinchReleaseOperator()) {
-      climber.climberActuation(-0.5); 
+      climber.climberActuation(-1); 
     } else if (ci.getWinchRetractOperator()) {
-      climber.climberActuation(0.5);
+      climber.climberActuation(1);
     } else {
       climber.climberActuation(0);
     }
@@ -354,7 +354,7 @@ public class Robot extends TimedRobot {
     } else if(ci.getInside()) {
       coralMech.closedLoopCoralArticulation(200,0.0711, 0.0289);
     } else if(ci.getToL3()) {
-      coralMech.closedLoopCoralArticulation(43, 0.0711, 0.0289);
+      coralMech.closedLoopCoralArticulation(31, 0.0711, 0.0289);
     } else if(ci.getWinchRelease()) {
       coralMech.closedLoopCoralArticulation(-28, 0.0711, 0.0289); 
    // } else if(ci.getArticulatedIntakePIDTuningAxis() > 0.1) {

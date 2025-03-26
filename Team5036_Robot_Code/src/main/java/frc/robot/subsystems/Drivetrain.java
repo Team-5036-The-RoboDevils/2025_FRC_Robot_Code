@@ -13,7 +13,7 @@ public class Drivetrain {
         this.hardware = hardware;
     }
 
-    private double capInput(double input, double max, double min){
+    public double capInput(double input, double max, double min){
         if(input > max){
             return max;
         } else if (input < min){
@@ -40,6 +40,10 @@ public class Drivetrain {
 
     public void resetGyro() {
         hardware.zeroGyroPos();
+    }
+
+    public void setGyroZero(){
+        hardware.setGyroAngle();
     }
 
     public double convertEncoderTicksToCentimetres(double encoderTicks) {

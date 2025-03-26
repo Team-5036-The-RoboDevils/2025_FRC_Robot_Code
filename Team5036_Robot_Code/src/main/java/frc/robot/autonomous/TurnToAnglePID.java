@@ -18,13 +18,13 @@ public class TurnToAnglePID {
     public static void execute(Drivetrain drivetrain, CoralMechanism coralMechanism, double angleToTurn, double turningPower, boolean turningClockwise, double angleToHoldArmAt, double target, double tempP,long startTime) {
         double currentAngle = drivetrain.getGyroAngle();
         double error = target - currentAngle;
-        double ACCEPTABLE_RANGE = 1; 
-       double feedForwardVal = Math.cos(Math.toRadians(currentAngle));
-
-        if (Math.abs(error) <= ACCEPTABLE_RANGE) {
+        double ACCEPTABLE_RANGE = 5; 
+       double feedForwardVal = drivetrain.capInput(Math.cos(Math.toRadians(currentAngle)), -0.3, 0.3);
+        
+        while (Math.abs(error) <= ACCEPTABLE_RANGE) {
             drivetrain.arcadeDrive(0, 0); 
-        } else if (Math.abs(error) >= ACCEPTABLE_RANGE && turningClockwise) {
-            drivetrain.arcadeDrive(0, feedForwardVal);
+        } if (Math.abs(error) >= ACCEPTABLE_RANGE && turningClockwise) {
+            drivetrain.arcadeDrive(0, -feedForwardVal);
         } else if (Math.abs(error) >= ACCEPTABLE_RANGE && !turningClockwise) {
             drivetrain.arcadeDrive(0, feedForwardVal);
         }

@@ -6,6 +6,7 @@ public class MoveArm {
     private CoralMechanism coralMech;
     private static final double kGrav = 0.0289; 
     private static final double kP = 0.0711; 
+    private static final double ACCEPTABLE_RANGE = 0.5; 
     
         private static boolean isInAutoTime(double startTime){
             
@@ -17,12 +18,15 @@ public class MoveArm {
         }
         
     
-        public static void executeAngle(CoralMechanism coralMech, double desiredAngle, double startTime){
-            if (isInAutoTime(startTime)) {
-                coralMech.closedLoopCoralArticulation(desiredAngle, kGrav, kP);
-                Timer.delay(0.02);
-            }
-        
-    }
-    
+        public static void executeAngle(CoralMechanism coralMech, double desiredAngle, double autonStartTime){
+            long startTime = System.currentTimeMillis();
+            long newTime = System.currentTimeMillis();
+
+            while (newTime-autonStartTime < 15000 && Math.abs(desiredAngle - coralMech.getCurrentAngle()) > ACCEPTABLE_RANGE) {
+                    coralMech.closedLoopCoralArticulation(desiredAngle, kGrav, kP);
+                    newTime = System.currentTimeMillis();
+                    Timer.delay(0.02);
+                }
+             }
+            
 }
