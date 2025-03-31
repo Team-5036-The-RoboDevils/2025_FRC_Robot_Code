@@ -60,7 +60,7 @@ public class DrivetrainHardware implements IDrivetrainHardware { // makes a prom
     }
     @Override
     public void setGyroAngle(){
-     gyro.setAngleAdjustment(-79);
+     gyro.setAngleAdjustment(60);
     }
 
     @Override 

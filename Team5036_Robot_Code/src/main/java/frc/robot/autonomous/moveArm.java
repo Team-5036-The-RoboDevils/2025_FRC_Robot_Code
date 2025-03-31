@@ -6,7 +6,7 @@ public class MoveArm {
     private CoralMechanism coralMech;
     private static final double kGrav = 0.0289; 
     private static final double kP = 0.0711; 
-    private static final double ACCEPTABLE_RANGE = 0.5; 
+    private static final double ACCEPTABLE_RANGE = 2; 
     
         private static boolean isInAutoTime(double startTime){
             

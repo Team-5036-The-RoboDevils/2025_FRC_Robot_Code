@@ -32,12 +32,15 @@ public class DriveDistP {
             
             //System.out.println("Target: " + desiredDist + ", Current sensor reading: " + drivetrain.getDistTravelled());
             //System.out.println("PID Drive straight Output: " + driveStraightController.getOutput());
-            drivetrain.arcadeDrive(driveStraightController.getOutput(), turnPidController.getOutput());
+            if (driveBack == false) {
+                drivetrain.arcadeDrive(driveStraightController.getOutput(), turnPidController.getOutput());
+            } else {
+                drivetrain.arcadeDrive(-driveStraightController.getOutput(), -turnPidController.getOutput());
+            }
             if (Math.abs(drivetrain.getDistanceTravelled() - targetDistInCm) <= EPSILON_RANGE) {
                 inRangeCount += 1;
             }
-
-            Timer.delay(0.05);
+            Timer.delay(0.02);
         }
 
         drivetrain.arcadeDrive(0, 0);
